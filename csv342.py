@@ -47,13 +47,20 @@ if sys.version_info[0] != 2:
     IS_PYTHON2 = False
     from csv import *
 else:
+    # Inherit names from standard csv modules.
+    from csv import QUOTE_ALL, QUOTE_MINIMAL, QUOTE_NONE, QUOTE_NONNUMERIC, \
+        field_size_limit, get_dialect, list_dialects, register_dialect, \
+        unregister_dialect
+    import csv
+    import cStringIO
+    import io
+    import StringIO
+
     IS_PYTHON2 = False
     _binary_type = str
     _text_type = unicode
-
-    # Read and write CSV using Python 2.6+.
-    import csv
-    import io
+    _type_of_StringI = type(cStringIO.StringIO(''))
+    _type_of_StringO = type(cStringIO.StringIO())
 
     def _key_to_str_value_map(key_to_value_map):
         """
@@ -85,6 +92,10 @@ else:
         """
 
         def __init__(self, target_stream, dialect=csv.excel, **keywords):
+            if isinstance(target_stream, (_type_of_StringO, StringIO.StringIO)):
+                raise Error(
+                    'use io.StringIO instead of %r for target_stream' %
+                    type(target_stream))
             self._target_stream = target_stream
             self._queue = io.BytesIO()
             str_keywords = _key_to_str_value_map(keywords)
@@ -174,6 +185,100 @@ else:
         assert target_text_stream is not None
 
         return _UnicodeCsvWriter(target_text_stream, dialect=dialect, **keywords)
+
+
+    class DictReader:
+        def __init__(self, input_stream, fieldnames=None, restkey=None, restval=None,
+                     dialect="excel", *args, **kwds):
+            self._fieldnames = fieldnames
+            self.restkey = restkey
+            self.restval = restval
+            self.reader = reader(input_stream, dialect, *args, **kwds)
+            self.dialect = dialect
+
+        def __iter__(self):
+            return self
+
+        def _set_fieldnames_from_first_row(self):
+            assert self._fieldnames is None
+            self._fieldnames = next(self.reader)
+
+        @property
+        def fieldnames(self):
+            if self._fieldnames is None:
+                try:
+                    self._set_fieldnames_from_first_row()
+                except StopIteration:
+                    pass
+            return self._fieldnames
+
+        @fieldnames.setter
+        def fieldnames(self, value):
+            self._fieldnames = value
+
+        @property
+        def line_num(self):
+            return self.reader.line_num
+
+
+        def __next__(self):
+            if self.fieldnames is None:
+                self._set_fieldnames_from_first_row()
+            fieldvalues = next(self.reader)
+
+            # Skip empty lines to avoid lists of None.
+            while len(fieldvalues) == 0:
+                fieldvalues = next(self.reader)
+
+            result = dict(zip(self.fieldnames, fieldvalues))
+            fieldnames_count = len(self.fieldnames)
+            fieldvalue_count = len(fieldvalues)
+            if fieldnames_count < fieldvalue_count:
+                result[self.restkey] = fieldvalues[fieldnames_count:]
+            elif fieldnames_count > fieldvalue_count:
+                for key in self.fieldnames[fieldvalue_count:]:
+                    result[key] = self.restval
+            return result
+
+        def next(self):
+            return self.__next__()
+
+
+class DictWriter:
+    def __init__(self, stream, fieldnames, restval="", extrasaction='raise',
+                 dialect='excel', *args, **kwds):
+        self.fieldnames = fieldnames
+        self.restval = restval
+        if extrasaction.lower() not in ('ignore', 'raise'):
+            raise ValueError(
+                "extrasaction (%s) must be 'raise' or 'ignore'" %
+                extrasaction)
+        self.extrasaction = extrasaction
+        self.writer = writer(stream, dialect, *args, **kwds)
+
+    def writeheader(self):
+        header = dict(zip(self.fieldnames, self.fieldnames))
+        self.writerow(header)
+
+    def _dict_to_list(self, row_dict):
+        if self.extrasaction == 'raise':
+            unknown_fields = [
+                key for key in row_dict if key not in self.fieldnames
+                ]
+            if unknown_fields:
+                raise ValueError(
+                    "dict contains fields not in fieldnames: " +
+                    ", ".join([repr(x) for x in unknown_fields]))
+        return [row_dict.get(key, self.restval) for key in self.fieldnames]
+
+    def writerow(self, row_dict):
+        return self.writer.writerow(self._dict_to_list(row_dict))
+
+    def writerows(self, row_dicts):
+        rows = []
+        for row_dict in row_dicts:
+            rows.append(self._dict_to_list(row_dict))
+        return self.writer.writerows(rows)
 
 
 if __name__ == '__main__':

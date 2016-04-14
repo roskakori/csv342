@@ -48,8 +48,14 @@ Tag a release::
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from distutils.core import setup
-
+import io
+import os
 import csv342
+
+_project_folder = os.path.dirname(__file__)
+_readme_path = os.path.join('README.rst')
+with io.open(_readme_path, 'r', encoding='utf-8') as readme_file:
+    readme_text = readme_file.read()
 
 setup(
     name="csv342",
@@ -61,7 +67,7 @@ setup(
     author_email="roskakori@users.sourceforge.net",
     url="http://pypi.python.org/pypi/csv342/",
     license="GNU Lesser General Public License 3 or later",
-    long_description=csv342.__doc__, #@UndefinedVariable
+    long_description=readme_text,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Plugins",

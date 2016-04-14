@@ -1,6 +1,6 @@
-include *.md
+include *.rst
 include *.py
 include *.txt
-include test/test*.csv
-include test/test*.py
+include test/*.csv
+include test/*.py
 

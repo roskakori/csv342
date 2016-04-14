@@ -1,0 +1,122 @@
+csv342
+======
+
+csv342 is a Python module similar to the the csv module in the standard
+library. Under Python 3, it just calls the standard csv module. Under
+Python 2, it provides a Python 3 like interface to reading and writing CSV
+files, in particular concerning non ASCII characters.
+
+It is distributed under the BSD license. The source code is available from
+https://github.com/roskakori/csv342.
+
+
+Installation
+------------
+
+To install, simply run::
+
+  $ pip install --upgrade csv342
+
+Alternatively you can download the distributin archive from
+http://pypi.python.org/pypi/csv342/, unpack it and copy ``csv342.py`` into
+your application path.
+
+
+Examples
+--------
+
+First, consider changing all string literals in you source code to
+``unicode`` instead of ``str`` under Python 2 using to avoid the
+messy ``u`` string prefix.
+
+>>> from __future__ import unicode_literals
+
+The following examples assume you did that, making your Python 2 code look
+like Python 3 even more.
+
+Once you import ``csv342`` using
+
+>>> import csv342 as csv
+
+your code can call CSV functions the same way independent of whether it runs
+under Python 2 or 3. First, let's write a few test data to a ``io.StringIO``:
+
+>>> import io
+>>> csv_stream = io.StringIO()
+>>> csv_writer = csv.writer(csv_stream)
+>>> csv_writer.writerow(['a', 'b'])
+>>> csv_writer.writerow(['1', '"x"'])
+>>> csv_content = csv_stream.getvalue()
+>>> str(csv_content)
+'a,b\r\n1,"""x"""\r\n'
+
+To read data from a ``io.StringIO`` use:
+
+>>> csv_stream = io.StringIO('a,b\r\n1,"""x"""\r\n')
+>>> csv_reader = csv.reader(csv_stream)
+>>> for row in csv_reader:
+>>>     print(row)
+
+
+To read a UTF-8 encoded CSV file with non ASCII characters use:
+
+>>> csv_path = os.path.join('test', 'utf-8.csv')
+>>> with io.open(csv_path, encoding='utf-8', newline='') as csv_file:
+>>>     csv_reader = csv.reader(csv_file, delimiter=',')
+>>>     for row in csv_reader:
+>>>         print('row {0:d}: data={1}'.format(csv_reader.line_num, row))
+
+
+Features
+--------
+
+* Supports Python 2's ``unicode`` strings.
+* Provides ``reader``, ``writer``, ``DictReader`` and ``DictWriter``.
+* Supports reading and writing with files, ``io.StringIO`` etc.
+* Rejects attempts to read or write with ``cStringIO`` or
+  ``StringIO.StringIO`` (which do not really work with ``unicode``);
+  use ``io.StringIO`` instead.
+
+
+Limitations
+-----------
+
+* All limitations of the standard ``csv`` module apply.
+* ``csv.Sniffer`` is not available under Python 2; use specific CSV options
+  instead.
+* Requires Python 2.6 or later.
+
+
+Performance
+-----------
+
+Processing a CSV with Python 2 using ``csv342`` is about 30% slower than
+processing it with Python 3. This is probably due the fact that under Python
+2 there is an intermediate translation to UTF-8 using pure Python code while
+in Python 3 uses mostly native code.
+
+Provided you have both Python 2 and 3 installed on the same machine, you can
+test this yourself running::
+
+    python3 test/performance.py
+    python2 test/performance.py
+
+On an ancient laptop with a core 2 duo Intel CPU and Ubuntu 14.04, this takes
+10.2 seconds respectively 13.6 seconds.
+
+
+License
+-------
+
+Copyright (c) 2016, Thomas Aglassinger
+All rights reserved.
+
+Distributed under the BSD License. For more information, see LICENSE.txt.
+
+
+Version history
+---------------
+
+Version 0.1, 2016-04-16
+
+* Initial release.
