@@ -37,24 +37,15 @@ https://github.com/roskakori/csv342.
 # POSSIBILITY OF SUCH DAMAGE.
 from __future__ import unicode_literals
 
+from csv import *
 import sys
 
+__version__ = '0.2'
 
 IS_PYTHON2 = sys.version_info[0] == 2
 
-# Compatibility helpers for Python 2 and 3.
-if not IS_PYTHON2:
-    from csv import *
-
-# HACK: We need to assign the version number here because the "from csv import *" above might have already
-# set it to the original csv module version of Python 3.
-__version__ = '0.2'
 
 if IS_PYTHON2:
-    # Inherit names from standard csv modules.
-    from csv import QUOTE_ALL, QUOTE_MINIMAL, QUOTE_NONE, QUOTE_NONNUMERIC, \
-        field_size_limit, get_dialect, list_dialects, register_dialect, \
-        unregister_dialect
     import csv
     import cStringIO
     import io
@@ -247,41 +238,41 @@ if IS_PYTHON2:
             return self.__next__()
 
 
-class DictWriter:
-    def __init__(self, stream, fieldnames, restval="", extrasaction='raise',
-                 dialect='excel', *args, **kwds):
-        self.fieldnames = fieldnames
-        self.restval = restval
-        if extrasaction.lower() not in ('ignore', 'raise'):
-            raise ValueError(
-                "extrasaction (%s) must be 'raise' or 'ignore'" %
-                extrasaction)
-        self.extrasaction = extrasaction
-        self.writer = writer(stream, dialect, *args, **kwds)
-
-    def writeheader(self):
-        header = dict(zip(self.fieldnames, self.fieldnames))
-        self.writerow(header)
-
-    def _dict_to_list(self, row_dict):
-        if self.extrasaction == 'raise':
-            unknown_fields = [
-                key for key in row_dict if key not in self.fieldnames
-                ]
-            if unknown_fields:
+    class DictWriter:
+        def __init__(self, stream, fieldnames, restval="", extrasaction='raise',
+                     dialect='excel', *args, **kwds):
+            self.fieldnames = fieldnames
+            self.restval = restval
+            if extrasaction.lower() not in ('ignore', 'raise'):
                 raise ValueError(
-                    "dict contains fields not in fieldnames: " +
-                    ", ".join([repr(x) for x in unknown_fields]))
-        return [row_dict.get(key, self.restval) for key in self.fieldnames]
+                    "extrasaction (%s) must be 'raise' or 'ignore'" %
+                    extrasaction)
+            self.extrasaction = extrasaction
+            self.writer = writer(stream, dialect, *args, **kwds)
 
-    def writerow(self, row_dict):
-        return self.writer.writerow(self._dict_to_list(row_dict))
+        def writeheader(self):
+            header = dict(zip(self.fieldnames, self.fieldnames))
+            self.writerow(header)
 
-    def writerows(self, row_dicts):
-        rows = []
-        for row_dict in row_dicts:
-            rows.append(self._dict_to_list(row_dict))
-        return self.writer.writerows(rows)
+        def _dict_to_list(self, row_dict):
+            if self.extrasaction == 'raise':
+                unknown_fields = [
+                    key for key in row_dict if key not in self.fieldnames
+                    ]
+                if unknown_fields:
+                    raise ValueError(
+                        "dict contains fields not in fieldnames: " +
+                        ", ".join([repr(x) for x in unknown_fields]))
+            return [row_dict.get(key, self.restval) for key in self.fieldnames]
+
+        def writerow(self, row_dict):
+            return self.writer.writerow(self._dict_to_list(row_dict))
+
+        def writerows(self, row_dicts):
+            rows = []
+            for row_dict in row_dicts:
+                rows.append(self._dict_to_list(row_dict))
+            return self.writer.writerows(rows)
 
 
 if __name__ == '__main__':

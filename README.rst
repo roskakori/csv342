@@ -82,8 +82,7 @@ Limitations
 -----------
 
 * All limitations of the standard ``csv`` module apply.
-* ``csv.Sniffer`` is not available under Python 2; use specific CSV options
-  instead.
+* Uses the standard ``csv.Sniffer`` under Python 2.
 * Requires Python 2.6 or later.
 
 
@@ -120,6 +119,7 @@ Version history
 Version 0.2, 2016-04-17
 * Fixed version number when running under Python 3.
 * Fixed helper constand ``IS_PYHTON2`` which always was ``False``.
+* Added remaining symbols from Python 2's ``csv`` module.
 
 Version 0.1, 2016-04-16
 * Initial release.
