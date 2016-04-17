@@ -39,14 +39,18 @@ from __future__ import unicode_literals
 
 import sys
 
-__version__ = "0.1"
 
+IS_PYTHON2 = sys.version_info[0] == 2
 
 # Compatibility helpers for Python 2 and 3.
-if sys.version_info[0] != 2:
-    IS_PYTHON2 = False
+if not IS_PYTHON2:
     from csv import *
-else:
+
+# HACK: We need to assign the version number here because the "from csv import *" above might have already
+# set it to the original csv module version of Python 3.
+__version__ = '0.2'
+
+if IS_PYTHON2:
     # Inherit names from standard csv modules.
     from csv import QUOTE_ALL, QUOTE_MINIMAL, QUOTE_NONE, QUOTE_NONNUMERIC, \
         field_size_limit, get_dialect, list_dialects, register_dialect, \
@@ -56,7 +60,6 @@ else:
     import io
     import StringIO
 
-    IS_PYTHON2 = False
     _binary_type = str
     _text_type = unicode
     _type_of_StringI = type(cStringIO.StringIO(''))

@@ -117,6 +117,9 @@ Distributed under the BSD License. For more information, see LICENSE.txt.
 Version history
 ---------------
 
-Version 0.1, 2016-04-16
+Version 0.2, 2016-04-17
+* Fixed version number when running under Python 3.
+* Fixed helper constand ``IS_PYHTON2`` which always was ``False``.
 
+Version 0.1, 2016-04-16
 * Initial release.
