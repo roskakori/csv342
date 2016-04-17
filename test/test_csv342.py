@@ -60,7 +60,7 @@ class ReaderTest(_CsvTest):
                 data_path, actual_data, expected_data))
 
     def test_can_read_quoted_csv(self):
-        self._assert_data_match('quoted', [['a', 'a', '"a"', u'\na']])
+        self._assert_data_match('quoted', [['a', 'a', '"a"', '\na']])
 
     def test_can_read_cp1252(self):
         self._assert_data_match('cp1252', [['\u20ac']], encoding='cp1252')
