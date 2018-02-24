@@ -95,8 +95,8 @@ class ReaderTest(_CsvTest):
     def test_fails_on_obsolete_StringIO(self):
         if csv.IS_PYTHON2:
             import StringIO
-            with StringIO.StringIO('a') as csv_stream:
-                self.assertRaises(csv.Error, csv.reader, csv_stream)
+            csv_stream = StringIO.StringIO('a')
+            self.assertRaises(csv.Error, csv.reader, csv_stream)
 
 
 class ExamplesText(_CsvTest):

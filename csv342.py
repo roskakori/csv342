@@ -127,6 +127,8 @@ if IS_PYTHON2:
         Iterator that reads a text stream and reencodes the input to UTF-8.
         """
         def __init__(self, text_stream):
+            if isinstance(text_stream, StringIO.StringIO):
+                raise Error('Cannot read from StringIO.StringIO instances.')
             self._text_stream = text_stream
 
         def __iter__(self):
