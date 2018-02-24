@@ -184,6 +184,9 @@ if IS_PYTHON2:
     class DictReader:
         def __init__(self, input_stream, fieldnames=None, restkey=None, restval=None,
                      dialect="excel", *args, **kwds):
+            if isinstance(input_stream, list):
+                # DictReader can accept a list of lines of input.
+                input_stream = io.StringIO('\n'.join(input_stream))
             self._fieldnames = fieldnames
             self.restkey = restkey
             self.restval = restval
