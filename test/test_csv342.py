@@ -152,6 +152,14 @@ class DictReaderTest(unittest.TestCase):
             names_to_values = list(csv.DictReader(csv_file, delimiter=',', fieldnames=['a', 'b']))
         self.assertEqual(expected_data, names_to_values)
 
+    def test_can_read_lines_of_input(self):
+        lines_to_read = 'a,b\n1,2'.splitlines()
+        expected_data = [
+            {'a': '1', 'b': '2'}
+        ]
+        names_to_values = list(csv.DictReader(lines_to_read, delimiter=','))
+        self.assertEqual(expected_data, names_to_values)
+
 
 class DictWriterTest(_CsvTest):
     def test_can_write(self):
