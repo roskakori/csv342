@@ -129,7 +129,7 @@ if IS_PYTHON2:
         def __init__(self, text_stream):
             if isinstance(text_stream, StringIO.StringIO):
                 raise Error('Cannot read from StringIO.StringIO instances.')
-            self._text_stream = text_stream
+            self._text_stream = iter(text_stream)
 
         def __iter__(self):
             return self
@@ -186,9 +186,6 @@ if IS_PYTHON2:
     class DictReader:
         def __init__(self, input_stream, fieldnames=None, restkey=None, restval=None,
                      dialect="excel", *args, **kwds):
-            if isinstance(input_stream, list):
-                # DictReader can accept a list of lines of input.
-                input_stream = io.StringIO('\n'.join(input_stream))
             self._fieldnames = fieldnames
             self.restkey = restkey
             self.restval = restval
