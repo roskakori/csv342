@@ -95,8 +95,8 @@ class ReaderTest(_CsvTest):
     def test_fails_on_obsolete_StringIO(self):
         if csv.IS_PYTHON2:
             import StringIO
-            with StringIO.StringIO('a') as csv_stream:
-                self.assertRaises(csv.Error, csv.reader, csv_stream)
+            csv_stream = StringIO.StringIO('a')
+            self.assertRaises(csv.Error, csv.reader, csv_stream)
 
 
 class ExamplesText(_CsvTest):
@@ -150,6 +150,14 @@ class DictReaderTest(unittest.TestCase):
         ]
         with io.StringIO(lines_to_read) as csv_file:
             names_to_values = list(csv.DictReader(csv_file, delimiter=',', fieldnames=['a', 'b']))
+        self.assertEqual(expected_data, names_to_values)
+
+    def test_can_read_lines_of_input(self):
+        lines_to_read = 'a,b\n1,2'.splitlines()
+        expected_data = [
+            {'a': '1', 'b': '2'}
+        ]
+        names_to_values = list(csv.DictReader(lines_to_read, delimiter=','))
         self.assertEqual(expected_data, names_to_values)
 
 
