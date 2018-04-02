@@ -40,6 +40,7 @@ import doctest
 import io
 import os
 import unittest
+from contextlib import closing
 
 import csv342 as csv
 
@@ -95,8 +96,8 @@ class ReaderTest(_CsvTest):
     def test_fails_on_obsolete_StringIO(self):
         if csv.IS_PYTHON2:
             import StringIO
-            csv_stream = StringIO.StringIO('a')
-            self.assertRaises(csv.Error, csv.reader, csv_stream)
+            with closing(StringIO.StringIO('a')) as csv_stream:
+                self.assertRaises(csv.Error, csv.reader, csv_stream)
 
 
 class ExamplesText(_CsvTest):
@@ -143,7 +144,7 @@ class DictReaderTest(unittest.TestCase):
         self.assertEqual(expected_data, names_to_values)
 
     def test_can_use_specified_fieldnames(self):
-        lines_to_read = '1,2\n3,4\n'
+        lines_to_read = '1,2\n3,4'
         expected_data = [
             {'a': '1', 'b': '2'},
             {'a': '3', 'b': '4'},
@@ -152,13 +153,17 @@ class DictReaderTest(unittest.TestCase):
             names_to_values = list(csv.DictReader(csv_file, delimiter=',', fieldnames=['a', 'b']))
         self.assertEqual(expected_data, names_to_values)
 
-    def test_can_read_lines_of_input(self):
+    def test_can_read_from_list(self):
         lines_to_read = 'a,b\n1,2'.splitlines()
         expected_data = [
             {'a': '1', 'b': '2'}
         ]
         names_to_values = list(csv.DictReader(lines_to_read, delimiter=','))
         self.assertEqual(expected_data, names_to_values)
+
+    def test_can_read_from_empty_list(self):
+        names_to_values = list(csv.DictReader([]))
+        self.assertEqual([], names_to_values)
 
 
 class DictWriterTest(_CsvTest):

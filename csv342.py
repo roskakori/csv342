@@ -128,7 +128,7 @@ if IS_PYTHON2:
         """
         def __init__(self, text_stream):
             if isinstance(text_stream, StringIO.StringIO):
-                raise Error('Cannot read from StringIO.StringIO instances.')
+                raise Error('StringIO.StringIO for CSV must be changed to io.StringIO')
             self._text_stream = iter(text_stream)
 
         def __iter__(self):
