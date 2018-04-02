@@ -116,7 +116,7 @@ Distributed under the BSD License. For more information, see LICENSE.txt.
 Version history
 ---------------
 
-Version 1.0, 2018-04-02
+Version 1.0.0, 2018-04-02
 * Fixed ``DictReader`` so that it can now read from a list of lines
   (`issue #1 <https://github.com/roskakori/csv342/issues/1>`_, contributed by
   Lucas Wiman).

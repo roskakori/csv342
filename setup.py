@@ -10,12 +10,14 @@ Create the installer archive::
 
 Upload release to PyPI::
 
-  $ python test/test_csv342.py
-  $ python setup.py sdist --formats=zip upload
+  $ python2 test/test_csv342.py
+  $ python3 test/test_csv342.py
+  $ python setup.py sdist --formats=zip
+  $ twine upload dist/csv342-*.zip
 
 Tag a release::
 
-  $ git tag -a -m "Tagged version 1.x." v1.x
+  $ git tag -a -m "Tagged version 1.0.x." v1.0.x
   $ git push --tags
 
 """

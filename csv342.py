@@ -40,7 +40,7 @@ from __future__ import unicode_literals
 from csv import *
 import sys
 
-__version__ = '1.0'
+__version__ = '1.0.0'
 
 IS_PYTHON2 = sys.version_info[0] == 2
 
