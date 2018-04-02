@@ -2,7 +2,7 @@
 """
 Tests for csv342.
 """
-# Copyright (c) 2016, Thomas Aglassinger
+# Copyright (c) 2016-2018, Thomas Aglassinger
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without

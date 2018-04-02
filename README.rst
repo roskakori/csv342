@@ -107,7 +107,7 @@ On an ancient laptop with a core 2 duo Intel CPU and Ubuntu 14.04, this takes
 License
 -------
 
-Copyright (c) 2016, Thomas Aglassinger
+Copyright (c) 2016-2018, Thomas Aglassinger
 All rights reserved.
 
 Distributed under the BSD License. For more information, see LICENSE.txt.
@@ -116,9 +116,15 @@ Distributed under the BSD License. For more information, see LICENSE.txt.
 Version history
 ---------------
 
+Version 1.0, 2018-04-02
+* Fixed ``DictReader`` so that it can now read from a list of lines
+  (`issue #1 <https://github.com/roskakori/csv342/issues/1>`_, contributed by
+  Lucas Wiman).
+* Fixed ``AttributeError`` in ``StringIO`` test (contributed by Lucas Wiman).
+
 Version 0.2, 2016-04-17
 * Fixed version number when running under Python 3.
-* Fixed helper constand ``IS_PYHTON2`` which always was ``False``.
+* Fixed helper constant ``IS_PYHTON2`` which always was ``False``.
 * Added remaining symbols from Python 2's ``csv`` module.
 
 Version 0.1, 2016-04-16
