@@ -7,7 +7,7 @@ files, in particular concerning non ASCII characters.
 It is distributed under the BSD license with the source code available from
 https://github.com/roskakori/csv342.
 """
-# Copyright (c) 2016-2018, Thomas Aglassinger
+# Copyright (c) 2016-2020, Thomas Aglassinger
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,7 @@ from __future__ import unicode_literals
 from csv import *
 import sys
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 IS_PYTHON2 = sys.version_info[0] == 2
 

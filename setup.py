@@ -21,7 +21,7 @@ Tag a release::
   $ git push --tags
 
 """
-# Copyright (c) 2016, Thomas Aglassinger
+# Copyright (c) 2016-2020, Thomas Aglassinger
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -71,7 +71,7 @@ setup(
     license="BSD-3-Clause",
     long_description=readme_text,
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production",
         "Environment :: Plugins",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
@@ -83,6 +83,9 @@ setup(
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Text Processing",
     ],
