@@ -68,7 +68,7 @@ setup(
     author="Thomas Aglassinger",
     author_email="roskakori@users.sourceforge.net",
     url="http://pypi.python.org/pypi/csv342/",
-    license="GNU Lesser General Public License 3 or later",
+    license="BSD-3-Clause",
     long_description=readme_text,
     classifiers=[
         "Development Status :: 4 - Beta",
