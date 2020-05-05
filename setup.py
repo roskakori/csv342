@@ -71,7 +71,7 @@ setup(
     license="BSD-3-Clause",
     long_description=readme_text,
     classifiers=[
-        "Development Status :: 5 - Production",
+        "Development Status :: 5 - Production/Stable ",
         "Environment :: Plugins",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
